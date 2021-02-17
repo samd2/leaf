@@ -140,7 +140,7 @@ jobs:
             os: "ubuntu-16.04"
             cxx: "clang++-8"
             sources: ""
-            llvm_os: "trusty"
+            llvm_os: "xenial"
             llvm_ver: "8"
             ubsan: "1"
             toolset: "clang"
@@ -154,7 +154,7 @@ jobs:
             os: "ubuntu-16.04"
             cxx: "clang++-8"
             sources: ""
-            llvm_os: "trusty"
+            llvm_os: "xenial"
             llvm_ver: "8"
             ubsan: "1"
             toolset: "clang"
@@ -192,7 +192,7 @@ jobs:
             os: "ubuntu-16.04"
             cxx: "clang++-8"
             sources: ""
-            llvm_os: "trusty"
+            llvm_os: "xenial"
             llvm_ver: "8"
             toolset: "clang"
             compiler: "clang++-8"
@@ -204,7 +204,7 @@ jobs:
             os: "ubuntu-16.04"
             cxx: "clang++-7"
             sources: ""
-            llvm_os: "trusty"
+            llvm_os: "xenial"
             llvm_ver: "7"
             toolset: "clang"
             compiler: "clang++-7"
@@ -229,7 +229,7 @@ jobs:
             os: "ubuntu-16.04"
             cxx: "clang++-5.0"
             sources: ""
-            llvm_os: "trusty"
+            llvm_os: "xenial"
             llvm_ver: "5.0"
             toolset: "clang"
             compiler: "clang++-5.0"
@@ -366,6 +366,7 @@ jobs:
           UBSAN_OPTIONS: ${{ matrix.ubsan_options }}
           LINKFLAGS: ${{ matrix.linkflags }}
           TRAVIS_BRANCH: ${{ github.base_ref }}
+          TRAVIS_OS_NAME: "linux"
         run: |
           echo '==================================> SETUP'
           if [ -n "$GHA_CONTAINER" ]; then
@@ -682,6 +683,7 @@ jobs:
           UBSAN_OPTIONS: ${{ matrix.ubsan_options }}
           LINKFLAGS: ${{ matrix.linkflags }}
           TRAVIS_BRANCH: ${{ github.base_ref }}
+          TRAVIS_OS_NAME: "osx"
         run: |
           echo '==================================> SETUP'
           set -ex
