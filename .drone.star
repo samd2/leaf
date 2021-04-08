@@ -4,54 +4,168 @@
 #
 # Copyright Rene Rivera 2020.
 
+# Configuration for https://cloud.drone.io/.
+
 # For Drone CI we use the Starlark scripting language to reduce duplication.
 # As the yaml syntax for Drone CI is rather limited.
-#
-#
-globalenv={}
-linuxglobalimage="cppalliance/droneubuntu1404:1"
-windowsglobalimage="cppalliance/dronevs2019"
 
 def main(ctx):
+  addon_clang_38 = { "apt": { "packages": [ "clang-3.8"] } }
+  addon_clang_39 = { "apt": { "packages": [ "clang-3.9"] } }
+  addon_clang_4 = { "apt": { "packages": [ "clang-4.0", "libstdc++-6-dev" ] } }
+  addon_clang_5 = { "apt": { "packages": [ "clang-5.0", "libstdc++-7-dev" ] } }
+  addon_clang_6 = { "apt": { "packages": [ "clang-6.0", "libc6-dbg", "libstdc++-8-dev" ] } }
+  addon_clang_7 = { "apt": { "packages": [ "clang-7", "libstdc++-8-dev" ] } }
+  addon_clang_8 = { "apt": { "packages": [ "clang-8", "libstdc++-8-dev" ] } }
+  addon_clang_9 = { "apt": { "packages": [ "clang-9", "libstdc++-9-dev" ] } }
+  addon_clang_10 = { "apt": { "packages": [ "clang-10", "libstdc++-9-dev" ] } }
+  addon_clang_11 = { "apt": { "packages": [ "clang-11", "libstdc++-9-dev" ] } }
+
+  addon_gcc_44 = { "apt": { "packages": [ "g++-4.4" ] } }
+  addon_gcc_46 = { "apt": { "packages": [ "g++-4.6" ] } }
+  addon_gcc_47 = { "apt": { "packages": [ "g++-4.7" ] } }
+  addon_gcc_48 = { "apt": { "packages": [ "g++-4.8" ] } }
+  addon_gcc_49 = { "apt": { "packages": [ "g++-4.9" ] } }
+  addon_gcc_5 =  { "apt": { "packages": [ "g++-5"   ] } }
+  addon_gcc_6 =  { "apt": { "packages": [ "g++-6"   ] } }
+  addon_gcc_7 =  { "apt": { "packages": [ "g++-7"   ] } }
+  addon_gcc_8 =  { "apt": { "packages": [ "g++-8"   ] } }
+  addon_gcc_9 =  { "apt": { "packages": [ "g++-9"   ] } }
+  addon_gcc_10 = { "apt": { "packages": [ "g++-10"  ] } }
+
   return [
-  # Removing docs from drone build  #
-  #  linux_cxx("DOC=1 Job 0", "g++", packages="g++-4.9 g++-5 g++-6 clang-3.6 clang-3.7 clang-3.8 ruby-full ninja-build", llvm_os="precise", llvm_ver="3.8", buildtype="b8b5133913-ed696db16c", buildscript="drone", image=linuxglobalimage, environment={'DOC': '1', 'DRONE_JOB_UUID': 'b6589fc6ab'}, globalenv=globalenv),
-  osx_cxx("UBSAN=1 TOOLSET=clang COMPILER=clang++ CXXSTD Job 1", "clang++", packages="", buildtype="boost", buildscript="drone", environment={'UBSAN': '1', 'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '11,14', 'UBSAN_OPTIONS': 'print_stacktrace=1', 'DRONE_JOB_UUID': '356a192b79'}, globalenv=globalenv),
-  osx_cxx("UBSAN=1 TOOLSET=clang COMPILER=clang++ CXXSTD Job 2", "clang++", packages="", buildtype="boost", buildscript="drone", environment={'UBSAN': '1', 'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '1z,2a', 'UBSAN_OPTIONS': 'print_stacktrace=1', 'DRONE_JOB_UUID': 'da4b9237ba'}, globalenv=globalenv),
-  osx_cxx("TOOLSET=clang COMPILER=clang++ CXXSTD=11,14,1 Job 3", "clang++", packages="", buildtype="boost", buildscript="drone", xcode_version="11.5", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': '77de68daec'}, globalenv=globalenv),
-  osx_cxx("TOOLSET=clang COMPILER=clang++ CXXSTD=11,14,1 Job 4", "clang++", packages="", buildtype="boost", buildscript="drone", xcode_version="11.4", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': '1b64538924'}, globalenv=globalenv),
-  osx_cxx("TOOLSET=clang COMPILER=clang++ CXXSTD=11,14,1 Job 5", "clang++", packages="", buildtype="boost", buildscript="drone", xcode_version="11.3", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': 'ac3478d69a'}, globalenv=globalenv),
-  osx_cxx("TOOLSET=clang COMPILER=clang++ CXXSTD=11,14,1 Job 6", "clang++", packages="", buildtype="boost", buildscript="drone", xcode_version="11.2", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': 'c1dfd96eea'}, globalenv=globalenv),
-  osx_cxx("TOOLSET=clang COMPILER=clang++ CXXSTD=11,14,1 Job 7", "clang++", packages="", buildtype="boost", buildscript="drone", xcode_version="11.1", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': '902ba3cda1'}, globalenv=globalenv),
-  osx_cxx("TOOLSET=clang COMPILER=clang++ CXXSTD=11,14,1 Job 8", "clang++", packages="", buildtype="boost", buildscript="drone", xcode_version="11", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': 'fe5dbbcea5'}, globalenv=globalenv),
-  osx_cxx("TOOLSET=clang COMPILER=clang++ CXXSTD=11,14,1 Job 9", "clang++", packages="", buildtype="boost", buildscript="drone", xcode_version="10.3", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': '0ade7c2cf9'}, globalenv=globalenv),
-  osx_cxx("TOOLSET=clang COMPILER=clang++ CXXSTD=11,14,1 Job 10", "clang++", packages="", buildtype="boost", buildscript="drone", xcode_version="10.2", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': 'b1d5781111'}, globalenv=globalenv),
-  osx_cxx("TOOLSET=clang COMPILER=clang++ CXXSTD=11,14,1 Job 11", "clang++", packages="", buildtype="boost", buildscript="drone", xcode_version="10.1", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': '17ba079149'}, globalenv=globalenv),
-  linux_cxx("UBSAN=1 TOOLSET=gcc COMPILER=g++-9 CXXSTD=11, Job 12", "g++-9", packages="g++-9", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'UBSAN': '1', 'TOOLSET': 'gcc', 'COMPILER': 'g++-9', 'CXXSTD': '11,14', 'UBSAN_OPTIONS': 'print_stacktrace=1', 'LINKFLAGS': '-fuse-ld=gold', 'DRONE_JOB_UUID': '7b52009b64'}, globalenv=globalenv),
-  linux_cxx("UBSAN=1 TOOLSET=gcc COMPILER=g++-9 CXXSTD=17, Job 13", "g++-9", packages="g++-9", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'UBSAN': '1', 'TOOLSET': 'gcc', 'COMPILER': 'g++-9', 'CXXSTD': '17,2a', 'UBSAN_OPTIONS': 'print_stacktrace=1', 'LINKFLAGS': '-fuse-ld=gold', 'DRONE_JOB_UUID': 'bd307a3ec3'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=gcc COMPILER=g++-9 CXXSTD=11,14,17,2a Job 14", "g++-9", packages="g++-9", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'gcc', 'COMPILER': 'g++-9', 'CXXSTD': '11,14,17,2a', 'DRONE_JOB_UUID': 'fa35e19212'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=gcc COMPILER=g++-8 CXXSTD=11,14,17 Job 15", "g++-8", packages="g++-8", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'gcc', 'COMPILER': 'g++-8', 'CXXSTD': '11,14,17', 'DRONE_JOB_UUID': 'f1abd67035'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=gcc COMPILER=g++-7 CXXSTD=11,14 Job 16", "g++-7", packages="g++-7", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'gcc', 'COMPILER': 'g++-7', 'CXXSTD': '11,14', 'DRONE_JOB_UUID': '1574bddb75'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=gcc COMPILER=g++-6 CXXSTD=11,14 Job 17", "g++-6", packages="g++-6", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'gcc', 'COMPILER': 'g++-6', 'CXXSTD': '11,14', 'DRONE_JOB_UUID': '0716d9708d'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=gcc COMPILER=g++-5 CXXSTD=11,14 Job 18", "g++-5", packages="g++-5", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'gcc', 'COMPILER': 'g++-5', 'CXXSTD': '11,14', 'DRONE_JOB_UUID': '9e6a55b6b4'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=gcc COMPILER=g++-4.9 CXXSTD=11 Job 19", "g++-4.9", packages="g++-4.9", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'gcc', 'COMPILER': 'g++-4.9', 'CXXSTD': '11', 'DRONE_JOB_UUID': 'b3f0c7f6bb'}, globalenv=globalenv),
-  linux_cxx("UBSAN=1 TOOLSET=clang COMPILER=clang++-8 CXXS Job 20", "clang++-8", packages="clang-8", llvm_os="trusty", llvm_ver="8", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'UBSAN': '1', 'TOOLSET': 'clang', 'COMPILER': 'clang++-8', 'CXXSTD': '11,14', 'UBSAN_OPTIONS': 'print_stacktrace=1', 'DRONE_JOB_UUID': '91032ad7bb'}, globalenv=globalenv),
-  linux_cxx("UBSAN=1 TOOLSET=clang COMPILER=clang++-8 CXXS Job 21", "clang++-8", packages="clang-8", llvm_os="trusty", llvm_ver="8", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'UBSAN': '1', 'TOOLSET': 'clang', 'COMPILER': 'clang++-8', 'CXXSTD': '17,2a', 'UBSAN_OPTIONS': 'print_stacktrace=1', 'DRONE_JOB_UUID': '472b07b9fc'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-10 CXXSTD=11,1 Job 22", "clang++-10", packages="clang-10", llvm_os="xenial", llvm_ver="10", buildtype="boost", buildscript="drone", image="cppalliance/droneubuntu1604:1", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-10', 'CXXSTD': '11,14,17,2a', 'DRONE_JOB_UUID': '12c6fc06c9'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-9 CXXSTD=11,14 Job 23", "clang++-9", packages="clang-9", llvm_os="xenial", llvm_ver="9", buildtype="boost", buildscript="drone", image="cppalliance/droneubuntu1604:1", environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-9', 'CXXSTD': '11,14,17,2a', 'DRONE_JOB_UUID': 'd435a6cdd7'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-8 CXXSTD=11,14 Job 24", "clang++-8", packages="clang-8", llvm_os="trusty", llvm_ver="8", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-8', 'CXXSTD': '11,14,17,2a', 'DRONE_JOB_UUID': '4d134bc072'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-7 CXXSTD=11,14 Job 25", "clang++-7", packages="clang-7", llvm_os="trusty", llvm_ver="7", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-7', 'CXXSTD': '11,14,17,2a', 'DRONE_JOB_UUID': 'f6e1126ced'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-6.0 CXXSTD=11, Job 26", "clang++-6.0", packages="clang-6.0", llvm_os="trusty", llvm_ver="6.0", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-6.0', 'CXXSTD': '11,14,17', 'DRONE_JOB_UUID': '887309d048'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-5.0 CXXSTD=11, Job 27", "clang++-5.0", packages="clang-5.0", llvm_os="trusty", llvm_ver="5.0", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-5.0', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': 'bc33ea4e26'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-4.0 CXXSTD=11, Job 28", "clang++-4.0", packages="clang-4.0", llvm_os="trusty", llvm_ver="4.0", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-4.0', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': '0a57cb53ba'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-3.9 CXXSTD=11, Job 29", "clang++-3.9", packages="clang-3.9 libstdc++-4.9-dev", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-3.9', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': '7719a1c782'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-3.8 CXXSTD=11, Job 30", "clang++-3.8", packages="clang-3.8 libstdc++-4.9-dev", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-3.8', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': '22d200f867'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-3.7 CXXSTD=11, Job 31", "clang++-3.7", packages="clang-3.7", llvm_os="precise", llvm_ver="3.7", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-3.7', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': '632667547e'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-3.6 CXXSTD=11, Job 32", "clang++-3.6", packages="clang-3.6 libstdc++-4.9-dev", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-3.6', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': 'cb4e5208b4'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=clang++-3.5 CXXSTD=11, Job 33", "clang++-3.5", packages="clang-3.5 libstdc++-4.9-dev", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': 'clang++-3.5', 'CXXSTD': '11,14,1z', 'DRONE_JOB_UUID': 'b6692ea5df'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=/usr/bin/clang++ CXXST Job 34", "/usr/bin/clang++", packages="clang-3.4", llvm_os="precise", llvm_ver="3.8", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': '/usr/bin/clang++', 'CXXSTD': '11', 'DRONE_JOB_UUID': 'f1f836cb4e'}, globalenv=globalenv),
-  linux_cxx("TOOLSET=clang COMPILER=/usr/bin/clang++ CXXST Job 35", "/usr/bin/clang++", packages="clang-3.3", llvm_os="precise", llvm_ver="3.8", buildtype="boost", buildscript="drone", image=linuxglobalimage, environment={'TOOLSET': 'clang', 'COMPILER': '/usr/bin/clang++', 'CXXSTD': '11', 'DRONE_JOB_UUID': '972a67c481'}, globalenv=globalenv),
+    linux_cxx("Clang 3.8", "clang++-3.8", packages=" ".join(addon_clang_38["apt"]["packages"]), llvm_os="trusty", llvm_ver="3.8", image="ubuntu:14.04", buildtype="boost", environment={"B2_TOOLSET": "clang-3.8", "B2_CXXSTD": "11"}),
+    linux_cxx("Clang 4.0", "clang++-4.0", packages=" ".join(addon_clang_4["apt"]["packages"]), llvm_os="xenial", llvm_ver="4.0", buildtype="boost", environment={"B2_TOOLSET": "clang-4.0", "B2_CXXSTD": "11,14"}),
+    linux_cxx("Clang 5.0", "clang++-5.0", packages=" ".join(addon_clang_5["apt"]["packages"]), llvm_os="bionic", llvm_ver="5.0", buildtype="boost", environment={"B2_TOOLSET": "clang-5.0", "B2_CXXSTD": "11,14"}),
+    linux_cxx("Clang 6.0", "clang++-6.0", packages=" ".join(addon_clang_6["apt"]["packages"]), llvm_os="bionic", llvm_ver="6.0", buildtype="boost", environment={"B2_TOOLSET": "clang-6.0", "B2_CXXSTD": "14,17" }),
+    linux_cxx("Clang 7", "clang++-7", packages=" ".join(addon_clang_7["apt"]["packages"]), llvm_os="bionic", llvm_ver="7", buildtype="boost", environment={"B2_TOOLSET": "clang-7", "B2_CXXSTD": "17,2a"}),
+    linux_cxx("Clang 8", "clang++-8", packages=" ".join(addon_clang_8["apt"]["packages"]), llvm_os="bionic", llvm_ver="8", buildtype="boost", environment={"B2_TOOLSET": "clang-8", "B2_CXXSTD" :"17,2a"}),
+    linux_cxx("Clang 9 standalone", "clang++-9", packages=" ".join(addon_clang_9["apt"]["packages"]), llvm_os="bionic", llvm_ver="9", buildtype="standalone", environment={"COMMENT": "standalone", "CXX": "clang++-9"}),
+    linux_cxx("Clang 9", "clang++-9", packages=" ".join(addon_clang_9["apt"]["packages"]), llvm_os="bionic", llvm_ver="9", buildtype="boost", environment={"B2_TOOLSET": "clang-9", "B2_CXXSTD": "17,2a"}),
+    linux_cxx("Clang 10 standalone", "clang++-10", packages=" ".join(addon_clang_10["apt"]["packages"]), llvm_os="bionic", llvm_ver="10", buildtype="standalone", environment={"COMMENT": "standalone", "CXX": "clang++-10"}),
+    linux_cxx("Clang 10", "clang++-10", packages=" ".join(addon_clang_10["apt"]["packages"]), llvm_os="bionic", llvm_ver="10", buildtype="boost", environment={"B2_TOOLSET": "clang-10", "B2_CXXSTD": "17,2a"}),
+    linux_cxx("Clang 11 standalone", "clang++-11", packages=" ".join(addon_clang_11["apt"]["packages"]), llvm_os="bionic", llvm_ver="11", buildtype="standalone", environment={"COMMENT": "standalone", "CXX":"clang++-11"}),
+    linux_cxx("Clang 11", "clang++-11", packages=" ".join(addon_clang_11["apt"]["packages"]), llvm_os="bionic", llvm_ver="11", buildtype="boost", environment={"B2_TOOLSET": "clang-11", "B2_CXXSTD":"17,2a"}),
+    linux_cxx("gcc 4.8 C++03 (no op)", "g++-4.8", packages=" ".join(addon_gcc_48["apt"]["packages"]), image="ubuntu:14.04", buildtype="boost", environment={"B2_TOOLSET": "gcc-4.8", "B2_CXXSTD": "03"}),
+    linux_cxx("gcc 4.8", "g++-4.8", packages=" ".join(addon_gcc_48["apt"]["packages"]), image="ubuntu:14.04", buildtype="boost", environment={"B2_TOOLSET": "gcc-4.8", "B2_CXXSTD": "11"}),
+    linux_cxx("gcc 4.9", "g++-4.9", packages=" ".join(addon_gcc_49["apt"]["packages"]), image="ubuntu:14.04", buildtype="boost", environment={"B2_TOOLSET": "gcc-4.9", "B2_CXXSTD": "11"}),
+    linux_cxx("gcc 5", "g++-5", packages=" ".join(addon_gcc_5["apt"]["packages"]), image="ubuntu:18.04", buildtype="boost", environment={"B2_TOOLSET": "gcc-5", "B2_CXXSTD": "11"}),
+    linux_cxx("gcc 6", "g++-6", packages=" ".join(addon_gcc_6["apt"]["packages"]), image="ubuntu:18.04", buildtype="boost", environment={"B2_TOOLSET": "gcc-6", "B2_CXXSTD": "11,14"}),
+    linux_cxx("gcc 7", "g++-7", packages=" ".join(addon_gcc_7["apt"]["packages"]), image="ubuntu:18.04", buildtype="boost", environment={"B2_TOOLSET": "gcc-7", "B2_CXXSTD": "14,17"}),
+    linux_cxx("gcc 8", "g++-8", packages=" ".join(addon_gcc_8["apt"]["packages"]), image="ubuntu:18.04", buildtype="boost", environment={"B2_TOOLSET": "gcc-8", "B2_CXXSTD": "17,2a"}),
+    linux_cxx("gcc 9", "g++-9", packages=" ".join(addon_gcc_9["apt"]["packages"]), image="ubuntu:18.04", buildtype="boost", environment={"B2_TOOLSET": "gcc-9", "B2_CXXSTD": "17,2a"}),
+    linux_cxx("gcc 9 standalone", "g++-9", packages=" ".join(addon_gcc_9["apt"]["packages"]), image="ubuntu:18.04", buildtype="standalone", environment={"COMMENT": "standalone", "CXX": "g++-9"}),
+    linux_cxx("gcc 10", "g++-10", packages=" ".join(addon_gcc_10["apt"]["packages"]), image="ubuntu:18.04", buildtype="boost", environment={"B2_TOOLSET": "gcc-10", "B2_CXXSTD": "17,2a"}),
+    linux_cxx("gcc 10 standalone", "g++-10", packages=" ".join(addon_gcc_10["apt"]["packages"]), image="ubuntu:18.04", buildtype="standalone", environment={"COMMENT": "standalone", "CXX": "g++-10"}),
+    linux_cxx("coverity", "", packages="", image="ubuntu:18.04", buildtype="coverity", environment={}),
+    linux_cxx("docs", "", packages="docbook docbook-xml docbook-xsl xsltproc libsaxonhe-java default-jre-headless flex libfl-dev bison unzip rsync", image="cppalliance/droneubuntu1604:1", buildtype="docs", environment={"COMMENT": "docs"}),
+    linux_cxx("codecov", "", packages=" ".join(addon_gcc_8["apt"]["packages"]), image="ubuntu:18.04", buildtype="codecov", environment={"COMMENT": "codecov.io","LCOV_BRANCH_COVERAGE": 0,"B2_CXXSTD": 11,"B2_TOOLSET": "gcc-8", "B2_DEFINES": "BOOST_NO_STRESS_TEST=1"}, stepenvironment={"CODECOV_TOKEN": {"from_secret": "codecov_token"} }),
+    linux_cxx("valgrind", "", packages=" ".join(addon_clang_6["apt"]["packages"]) + " autotools-dev automake", image="ubuntu:18.04", buildtype="valgrind", environment={"COMMENT": "valgrind","B2_TOOLSET": "clang-6.0", "B2_CXXSTD": "11,14", "B2_DEFINES": "BOOST_NO_STRESS_TEST=1", "B2_VARIANT": "debug", "B2_TESTFLAGS": "testing.launcher=valgrind","VALGRIND_OPTS": "--error-exitcode=1" }),
+    linux_cxx("asan", "clang++-11", packages=" ".join(addon_clang_11["apt"]["packages"]), image="ubuntu:18.04", llvm_os="bionic", llvm_ver="11", buildtype="boost", environment={"COMMENT": "asan", "B2_VARIANT": "debug", "B2_TOOLSET": "clang-11", "B2_CXXSTD":"17", "B2_ASAN": "1", "B2_DEFINES": "BOOST_NO_STRESS_TEST=1"}, privileged=True),
+    linux_cxx("ubsan", "clang++-11", packages=" ".join(addon_clang_11["apt"]["packages"]), llvm_os="bionic", llvm_ver="11", buildtype="boost", environment={"COMMENT": "asan", "B2_VARIANT": "debug", "B2_TOOLSET": "clang-11", "B2_CXXSTD":"17", "B2_UBSAN": "1", "B2_DEFINES": "BOOST_NO_STRESS_TEST=1" }),
+    # linux_cxx("Intel", "", packages="g++-7 cmake build-essential pkg-config", buildtype="intel", environment={"COMMENT": "Intel oneAPI Toolkit", "B2_TOOLSET": "intel-linux", "B2_CXXSTD": "11,14,17", "B2_FLAGS": "warnings=on warnings-as-errors=off" }),
+    windows_cxx("msvc-14.0", "", image="cppalliance/dronevs2015", buildtype="boost", environment={"B2_TOOLSET": "msvc-14.0", "B2_CXXSTD": "11,14"}),
+    windows_cxx("msvc-14.1", "", image="cppalliance/dronevs2017", buildtype="boost", environment={"B2_TOOLSET": "msvc-14.1", "B2_CXXSTD": "11,14,17"}),
+    windows_cxx("msvc-14.1 standalone", "msvc-14.1", image="cppalliance/dronevs2017", buildtype="standalone-windows", environment={"COMMENT": "standalone","CXX": "msvc-14.1"}),
+    windows_cxx("msvc-14.2", "", image="cppalliance/dronevs2019", buildtype="boost", environment={"B2_TOOLSET": "msvc-14.2", "B2_CXXSTD": "17,latest"}),
+    windows_cxx("msvc-14.2 standalone", "msvc-14.2", image="cppalliance/dronevs2019", buildtype="standalone-windows", environment={"COMMENT": "standalone","CXX": "msvc-14.2"})
     ]
 
-# from https://github.com/boostorg/boost-ci
-load("@boost_ci//ci/drone/:functions.star", "linux_cxx","windows_cxx","osx_cxx","freebsd_cxx")
+# Generate pipeline for Linux platform compilers.
+def linux_cxx(name, cxx, cxxflags="", packages="", llvm_os="", llvm_ver="", arch="amd64", image="ubuntu:18.04", buildtype="boost", environment={}, stepenvironment={}, privileged=False):
+  environment_global = {
+      "CXX": cxx,
+      "CXXFLAGS": cxxflags,
+      "PACKAGES": packages,
+      "LLVM_OS": llvm_os,
+      "LLVM_VER": llvm_ver,
+      "B2_CI_VERSION": 1,
+      # see: http://www.boost.org/build/doc/html/bbv2/overview/invocation.html#bbv2.overview.invocation.properties
+      # - B2_ADDRESS_MODEL=64,32
+      # - B2_LINK=shared,static
+      # - B2_THREADING=threading=multi,single
+      "B2_VARIANT" : "release",
+      "B2_FLAGS" : "warnings=extra warnings-as-errors=on"
+    }
+  environment_current=environment_global
+  environment_current.update(environment)
+
+  return {
+    "name": "Linux %s" % name,
+    "kind": "pipeline",
+    "type": "docker",
+    "trigger": { "branch": [ "master","develop", "drone*", "bugfix/*", "feature/*", "fix/*", "pr/*" ] },
+    "platform": {
+      "os": "linux",
+      "arch": arch
+    },
+    # Create env vars per generation arguments.
+    "environment": environment_current,
+    "clone": { "depth": 5 },
+    "steps": [
+      {
+        "name": "Everything",
+        "image": image,
+        "privileged" : privileged,
+        "environment": stepenvironment,
+        "commands": [
+
+          "echo '==================================> SETUP'",
+          "uname -a",
+          "apt-get -o Acquire::Retries=3 update && DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata && apt-get -o Acquire::Retries=3 install -y sudo software-properties-common wget curl apt-transport-https git cmake apt-file sudo mercurial && rm -rf /var/lib/apt/lists/*",
+
+          "echo '==================================> PACKAGES'",
+          "./.drone/linux-cxx-install.sh",
+
+          "echo '==================================> INSTALL AND COMPILE'",
+          "./.drone/%s-script.sh" % buildtype,
+        ]
+      }
+    ]
+  }
+
+def windows_cxx(name, cxx="", cxxflags="", packages="", llvm_os="", llvm_ver="", arch="amd64", image="ubuntu:18.04", buildtype="boost", environment={}):
+  environment_global = {
+      "CXX": cxx,
+      "CXXFLAGS": cxxflags,
+      "PACKAGES": packages,
+      "LLVM_OS": llvm_os,
+      "LLVM_VER": llvm_ver,
+      "B2_CI_VERSION": 1,
+      # see: http://www.boost.org/build/doc/html/bbv2/overview/invocation.html#bbv2.overview.invocation.properties
+      # - B2_ADDRESS_MODEL=64,32
+      # - B2_LINK=shared,static
+      # - B2_THREADING=threading=multi,single
+      "B2_VARIANT" : "release",
+      "B2_FLAGS" : "warnings=extra warnings-as-errors=on"
+    }
+  environment_current=environment_global
+  environment_current.update(environment)
+
+  return {
+    "name": "Windows %s" % name,
+    "kind": "pipeline",
+    "type": "docker",
+    "trigger": { "branch": [ "master","develop", "drone", "bugfix/*", "feature/*", "fix/*", "pr/*" ] },
+    "platform": {
+      "os": "windows",
+      "arch": arch
+    },
+    # Create env vars per generation arguments.
+    "environment": environment_current,
+    "clone": { "depth": 5 },
+    "steps": [
+      {
+        "name": "Everything",
+        "image": image,
+        "commands": [
+          "echo '==================================> SETUP'",
+          "echo '==================================> PACKAGES'",
+          ".drone/windows-msvc-install.bat",
+
+          "echo '==================================> INSTALL AND COMPILE'",
+          ".drone/%s-script.bat" % buildtype,
+        ]
+      }
+    ]
+  }
